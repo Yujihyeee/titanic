@@ -71,8 +71,29 @@ c = show_pie_chart(train, 'CabinCategory')
 c
 
 train.Fare.fillna(0)
-train['FareCategory'] = pd.qcut(train.Fare, 8, labels=range(1,9))
+train['FareCategory'] = pd.qcut(train.Fare, 8, labels=range(1, 9))
 train.FareCategory = train.FareCategory.astype(int)
 
 c = show_pie_chart(train, 'FareCategory')
+c
+
+train['Family'] = train['SibSp'] = train['Parch'] + 1
+train.loc[train['Family'] > 4, 'Family'] = 5
+
+train['LsAlone'] = 1
+train.loc[train['Family'] > 1, 'IsAlone'] = 0
+
+c = show_pie_chart(train, 'Family')
+c
+
+c = show_pie_chart(train, 'IsAlone')
+c
+
+train['TicketCategory'] = train.Ticket.str.split()
+train['TicketCategory'] = [i[-1][0] for i in train['TicketCategory']]
+train['TicketCategory'] = train['TicketCategory'].replace(['8', '9', 'L'],
+                                                          '8')
+train['TicketCategory'] = pd.factorize(train['TicketCategory'])[0] + 1
+
+c = show_pie_chart(train, 'TicketCategory')
 c
